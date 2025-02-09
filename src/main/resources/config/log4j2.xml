@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <!-- 自定义一些变量 -->
+    <Properties>
+        <!-- 日志输出格式 -->
+        <Property name="log_pattern">%d [%t] %p %c{1.}:%L %msg%n%throwable</Property>
+        <!-- 单个日志文件最大大小 -->
+        <Property name="max_single_file_size">100MB</Property>
+    </Properties>
+
+    <!-- 使用Appenders元素可以将日志事件数据写到各种目标位置 -->
+    <Appenders>
+        <!-- Console Appender常用于将日志输出到System.out，一般用在开发环境 -->
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${log_pattern}"/>
+        </Console>
+
+        <!-- RollingFile Appender会将日志输出到fileName属性指定的文件中，且需要指定TriggeringPolicy和RolloverStrategy -->
+        <RollingRandomAccessFile name="InfoFile" fileName="logs/server.log" filePattern="logs/server.log.%i">
+            <!-- 只接受DEBUG及以上级别的日志 -->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!-- 日志输出格式 -->
+            <PatternLayout pattern="${log_pattern}"/>
+            <!-- Policies表示一个CompositeTriggeringPolicy，可以组合多个TriggeringPolicy -->
+            <Policies>
+                <!-- SizeBasedTriggeringPolicy用于按文件大小滚动日志 -->
+                <SizeBasedTriggeringPolicy size="${max_single_file_size}"/>
+            </Policies>
+            <!-- 默认滚动策略 -->
+            <DefaultRolloverStrategy max="5"/>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="ErrorFile" fileName="logs/error.log" filePattern="logs/error.log.%i">
+            <!-- 只接受DEBUG及以上级别的日志 -->
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!-- 日志输出格式 -->
+            <PatternLayout pattern="${log_pattern}"/>
+            <!-- Policies表示一个CompositeTriggeringPolicy，可以组合多个TriggeringPolicy -->
+            <Policies>
+                <!-- SizeBasedTriggeringPolicy用于按文件大小滚动日志 -->
+                <SizeBasedTriggeringPolicy size="${max_single_file_size}"/>
+            </Policies>
+            <!-- 默认滚动策略 -->
+            <DefaultRolloverStrategy max="3"/>
+        </RollingRandomAccessFile>
+
+        <Async name="async">
+            <AppenderRef ref="InfoFile"/>
+        </Async>
+        <Async name="async_error">
+            <AppenderRef ref="ErrorFile"/>
+        </Async>
+    </Appenders>
+
+    <!-- Loggers元素定义了日志记录器 -->
+    <Loggers>
+        <!-- Root logger，它是所有logger的父logger -->
+        <Root level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="InfoFile"/>
+            <AppenderRef ref="ErrorFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
