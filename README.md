@@ -5,7 +5,7 @@ jdk1.8
 ## maven-app-demo-archetype
 
 ### Getting Started
-1. mvn
+1. mvn archetype:create-from-project -Darchetype.properties=archetype.properties
 2. Open target/generated-sources/archetype in Terminal
 3. mvn install
 4. mvn archetype:crawl
