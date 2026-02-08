@@ -2,6 +2,7 @@ package com.opensource.demo.common.exception;
 
 import com.opensource.demo.common.model.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 @ResponseBody
 @Slf4j
+@Order(0)
 public class WebExceptionHandler {
 
     @ExceptionHandler

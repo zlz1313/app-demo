@@ -29,6 +29,6 @@ else
   echo "Successful deregister from service registry via actuator url"
 fi
 
-sleep 5
+sleep 30
 
 echo "graceful shutdown prestop."

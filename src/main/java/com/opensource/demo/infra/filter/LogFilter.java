@@ -1,13 +1,14 @@
 package com.opensource.demo.infra.filter;
 
 import cn.hutool.json.JSONUtil;
+import com.opensource.demo.common.model.ApiThreadLocal;
 import com.opensource.demo.utils.RequestUtils;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,14 +29,24 @@ public class LogFilter implements Filter {
         String path = request.getRequestURI();
         String method = request.getMethod();
         String params = "{}";
+        ApiThreadLocal.ApiInfoDto apiInfo = new ApiThreadLocal.ApiInfoDto();
+        apiInfo.setLevel("info");
+        apiInfo.setOp(path);
+        apiInfo.setMethod(method);
+        apiInfo.setRequestTime(System.currentTimeMillis());
         try {
             params = JSONUtil.toJsonStr(extractParams(request));
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        } finally {
+            apiInfo.setOrgmsg(params);
+        }
+        ApiThreadLocal.set(apiInfo);
 
-        long nanoTime = System.nanoTime();
-        filterChain.doFilter(servletRequest, servletResponse);
-        double costTime = (System.nanoTime() - nanoTime) * 1d / 1000000;
-        log.info("op={}||uri={}||param={}||status={}||cost={}ms", method, path, params, response.getStatus(), costTime);
+        try {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } finally {
+            ApiThreadLocal.remove();
+        }
     }
 
     private Map<String, Object> extractParams(HttpServletRequest request) {
