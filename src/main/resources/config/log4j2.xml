@@ -3,7 +3,7 @@
     <!-- 自定义一些变量 -->
     <Properties>
         <!-- 日志输出格式 -->
-        <Property name="log_pattern">%d [%t] %p %c{1.}:%L %msg%n%throwable</Property>
+        <Property name="log_pattern">%d [%t] [%X{traceId}] %p %c{1.}:%L %msg%n%throwable</Property>
         <!-- 单个日志文件最大大小 -->
         <Property name="max_single_file_size">100MB</Property>
     </Properties>
