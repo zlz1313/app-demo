@@ -260,9 +260,6 @@
                     <execution>
                         <id>report</id>
                         <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -298,9 +295,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-archetype-plugin</artifactId>
                 <version>3.2.1</version>
-                <configuration>
-                    <propertyFile>archetype.properties</propertyFile>
-                </configuration>
+<!--                <configuration>-->
+<!--                    <propertyFile>archetype.properties</propertyFile>-->
+<!--                </configuration>-->
             </plugin>
         </plugins>
         <extensions>
